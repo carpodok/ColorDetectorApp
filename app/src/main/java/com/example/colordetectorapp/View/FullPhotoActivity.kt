@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -32,6 +33,7 @@ class FullPhotoActivity : AppCompatActivity() {
     lateinit var adapter: SavedPhotosAdapter
 
     private var index: Int = 0
+    private lateinit var uri: Uri
 
     private lateinit var bitmap: Bitmap
 
@@ -93,9 +95,16 @@ class FullPhotoActivity : AppCompatActivity() {
 
         // Value
         index = intent.getIntExtra("photoIndex", 0)
+        val uriString = intent.getStringExtra("uri")
 
 
-        Glide.with(this).load(getPhotoList()[index]).into(photo)
+        if (uriString != null){
+            uri = Uri.parse(uriString)
+            Glide.with(this).load(uri).into(photo)
+
+        }else{
+            Glide.with(this).load(getPhotoList()[index]).into(photo)
+        }
     }
 
     @SuppressLint("SetTextI18n")

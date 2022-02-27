@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".View.FullPhotoActivity">
 
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/fp_card_color_preview"
         android:layout_width="150dp"

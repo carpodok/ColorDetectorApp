@@ -1,20 +1,22 @@
 package com.example.colordetectorapp.View
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
-import android.view.TouchDelegate
 import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,8 +31,6 @@ import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.example.colordetectorapp.Model.ColorModel
-import com.example.colordetectorapp.Util.ColorUtils
 import com.example.colordetectorapp.databinding.ActivityMainBinding
 import com.example.colordetectorapp.handler.ColorDetectHandler
 import com.example.colordetectorapp.viewmodel.ColorDetectViewModel
@@ -38,7 +38,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -145,61 +147,24 @@ class MainActivity : AppCompatActivity() {
         cameraPreview.setOnTouchListener { view, motionEvent ->
 
             // val rectCameraPreview = Rect(10,100,30,0)
-            val touchableArea = Rect()
-            cameraPreview.getHitRect(touchableArea)
-
-            card_color_preview.y = motionEvent.y
-            card_color_preview.x = motionEvent.x
-
-            var cx = motionEvent.x
-
-            var x = card_color_preview.x + card_color_preview.x / 2
-
-            detect(motionEvent)
-
-            /* Toast.makeText(this,(rectf.right).toString(),Toast.LENGTH_SHORT).show()
-             Toast.makeText(this,(rectf.left).toString(),Toast.LENGTH_SHORT).show()*/
-
-            /*Log.d("left         :",(rectf.left).toString())
-            Log.d("right        :", (rectf.right).toString())
-            Log.d("top          :", (rectf.top).toString())
-            Log.d("bottom       :", (rectf.bottom).toString())*/
-
-            //
-            /*
-             pointer.y = card_color_preview.y + 100
-             pointer.x = x
- */
 
 
-
-            val bitmapRect = Rect()
+            var pointerX = card_color_preview.x + card_color_preview.x / 2
+            var cardX = motionEvent.x
 
 
             pointer.y = card_color_preview.y + 100
-            //  pointer.x = card_color_preview.x
 
-            pointer.x = x
+            if (pointerX >= cameraPreview.right - 50f){
+                pointerX = cameraPreview.right - 50f
+            }
 
-            /* pointer.setOnTouchListener { view, motionEvent ->
-                 when (motionEvent.actionMasked) {
-                     MotionEvent.ACTION_DOWN -> {
-                         dX = motionEvent.x
-                         dY = motionEvent.y
-                     }
-                     MotionEvent.ACTION_MOVE -> {
-                         val movedX: Float = motionEvent.x
-                         val movedY: Float = motionEvent.y
+            card_color_preview.y = motionEvent.y
+            card_color_preview.x = cardX
 
-                         val distanceX: Float = movedX - dY
-                         val distanceY: Float = movedY - dY
+            pointer.x = pointerX
 
-                         pointer.x = pointer.x + distanceX
-                         pointer.y = pointer.y + distanceY
-                     }
-                 }
-                 true
-             }*/
+            detect(motionEvent)
 
             true
         }
@@ -229,25 +194,6 @@ class MainActivity : AppCompatActivity() {
             clickSavedPhotos()
         }
     }
-
-    private fun changTouchableArea(view: View, extraSpace: Int) {
-
-        val parent = view.parent as View
-
-        val touchableArea = Rect()
-        //cameraPreview.getLocalVisibleRect(rectCameraPreview)
-        cameraPreview.getHitRect(touchableArea)
-
-        touchableArea.right -= extraSpace
-        touchableArea.top -= extraSpace
-        touchableArea.left -= extraSpace
-        touchableArea.bottom -= extraSpace
-
-        parent.touchDelegate = TouchDelegate(touchableArea, view)
-
-
-    }
-
     @SuppressLint("SetTextI18n")
     private fun detect(motionEvent: MotionEvent) {
 
@@ -406,6 +352,27 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(gallery, IMAGE_CHOOSE)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_CHOOSE ) {
+            try {
+                val imageUri: Uri? = data?.data
+
+                val intent = Intent(this,FullPhotoActivity::class.java)
+                intent.putExtra("uri",imageUri.toString())
+                startActivity(intent)
+
+
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            }
+        } else {
+            Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show()
+        }
+
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -468,7 +435,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "MainActivity"
-        private val IMAGE_CHOOSE = 1000
-        private val PERMISSION_CODE = 1001
+        private const val IMAGE_CHOOSE = 1000
+        private const val PERMISSION_CODE = 1001
     }
 }
