@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ColorDetectorApp</string>
+
+    <string name="no_photo_text">There is no photo here</string>
+</resources>
