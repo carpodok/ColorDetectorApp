@@ -1,5 +1,5 @@
 # ColorDetectorApp
-## What this app do ?
+### What this app do ?
 :radio_button: Main aim of this app is detecting colors on camera and shows their names and hex color codes.
 
 ### :arrow_forward:  What I used to make this app ?
