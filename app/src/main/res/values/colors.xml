@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="default_color">#000000</color>
+    <color name="ripple_effect_color">#9C9C9C</color>
+
+
 </resources>

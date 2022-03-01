@@ -1,13 +1,13 @@
 package com.example.colordetectorapp.View
 
 import android.Manifest
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -16,12 +16,17 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -30,7 +35,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.example.colordetectorapp.databinding.ActivityMainBinding
 import com.example.colordetectorapp.handler.ColorDetectHandler
 import com.example.colordetectorapp.viewmodel.ColorDetectViewModel
@@ -40,7 +44,6 @@ import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -71,11 +74,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var galleryBtn: Button
     private lateinit var takePhotoBtn: Button
     private lateinit var switchCameraBtn: Button
-    lateinit var colorTextView: TextView
+    lateinit var colorName: TextView
     lateinit var fabSavedfPhotos: FloatingActionButton
     lateinit var pointer: View
     lateinit var cardColor: CardView
     lateinit var card_color_preview: CardView
+    lateinit var card_colorName: TextView
     lateinit var colorHex: TextView
 
     // ViewModel
@@ -99,6 +103,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -144,35 +151,72 @@ class MainActivity : AppCompatActivity() {
 
         startCamera()
 
+
+
+
+        colorHex.setOnClickListener {
+            copyText(colorHex.text.toString())
+        }
+
+        colorName.setOnClickListener {
+            copyText(colorName.text.toString())
+        }
+
+
         cameraPreview.setOnTouchListener { view, motionEvent ->
 
             // val rectCameraPreview = Rect(10,100,30,0)
 
 
+            card_color_preview.y = motionEvent.y
+            card_color_preview.x = motionEvent.x
+
             var pointerX = card_color_preview.x + card_color_preview.x / 2
-            var cardX = motionEvent.x
+            var pointerY = card_color_preview.y + 100
+
+            val margin = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                15f,
+                resources.displayMetrics
+            )
+
+            Log.d("y bottom",cameraPreview.bottom.toString())
+            Log.d("y ",pointerY.toString())
 
 
-            pointer.y = card_color_preview.y + 100
+            if (pointerY <= cameraPreview.top){
+                pointerY = cameraPreview.top.toFloat()
+            }else if(pointerY >= cameraPreview.bottom - margin){
+                pointerY = cameraPreview.bottom- margin
+            }
 
-            if (pointerX >= cameraPreview.right - 50f){
+            pointer.y = pointerY
+
+
+            /*  if (pointerX >= cameraPreview.right  - margin) {
+                  pointerX = cameraPreview.right  - margin
+              }*/
+
+            if (pointerX >= cameraPreview.right - 50f) {
                 pointerX = cameraPreview.right - 50f
             }
 
-            card_color_preview.y = motionEvent.y
-            card_color_preview.x = cardX
 
             pointer.x = pointerX
 
-            detect(motionEvent)
+
+
+            if (motionEvent.action == MotionEvent.ACTION_MOVE || motionEvent.action == MotionEvent.ACTION_DOWN) {
+                detect()
+            }
 
             true
         }
 
-        detectingImageView.setOnTouchListener { view, motionEvent ->
+        /*detectingImageView.setOnTouchListener { view, motionEvent ->
             // detect(motionEvent, false)
             true
-        }
+        }*/
 
         galleryBtn.setOnClickListener {
             clickGallery()
@@ -181,9 +225,7 @@ class MainActivity : AppCompatActivity() {
         takePhotoBtn.setOnClickListener {
             takePhoto()
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                animateFlash()
-            }
+            animateFlash()
         }
 
         switchCameraBtn.setOnClickListener {
@@ -193,11 +235,13 @@ class MainActivity : AppCompatActivity() {
         fabSavedfPhotos.setOnClickListener {
             clickSavedPhotos()
         }
-    }
-    @SuppressLint("SetTextI18n")
-    private fun detect(motionEvent: MotionEvent) {
 
-        if (motionEvent.action == MotionEvent.ACTION_MOVE || motionEvent.action == MotionEvent.ACTION_DOWN) {
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun detect() {
+
 
             /*  bitmap = cameraPreview.bitmap!!
 
@@ -228,11 +272,12 @@ class MainActivity : AppCompatActivity() {
             val g = currColor.g
             val b = currColor.b
 
-            colorTextView.text = "Color Name : $name "
-            colorHex.text = name
+            colorName.text = name
+            card_colorName.text = name
+            colorHex.text = "#$hex"
             cardColor.setCardBackgroundColor(Color.rgb(r!!, g!!, b!!))
 
-        }
+
     }
 
     private fun startCamera() {
@@ -355,12 +400,12 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_CHOOSE ) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_CHOOSE) {
             try {
                 val imageUri: Uri? = data?.data
 
-                val intent = Intent(this,FullPhotoActivity::class.java)
-                intent.putExtra("uri",imageUri.toString())
+                val intent = Intent(this, FullPhotoActivity::class.java)
+                intent.putExtra("uri", imageUri.toString())
                 startActivity(intent)
 
 
@@ -390,6 +435,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun copyText(text: String) {
+        val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("copy_text", text)
+        clipboardManager.setPrimaryClip(clipData)
+        Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
+    }
+
     private fun setInit() {
 
         cameraProviderResult.launch(Manifest.permission.CAMERA)
@@ -399,16 +451,18 @@ class MainActivity : AppCompatActivity() {
         cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
         // Views
-        colorTextView = binding.colorText
+        colorName = binding.colorText
         cameraPreview = binding.cameraPreview
         galleryBtn = binding.galleryBtn
         takePhotoBtn = binding.takePhotoBtn
         switchCameraBtn = binding.switchCameraBtn
         fabSavedfPhotos = binding.fabSavedPhotos
         pointer = binding.pointer
-        detectingImageView = binding.detectingImageView
-        cardColor = binding.cardColor
         colorHex = binding.colorHex
+
+       // detectingImageView = binding.detectingImageView
+        cardColor = binding.cardColor
+        card_colorName = binding.cardColorName
         card_color_preview = binding.cardColorPreview
 
         //ViewModel
@@ -418,10 +472,10 @@ class MainActivity : AppCompatActivity() {
         imgIndex = intent.getIntExtra("imgIndex", -1)
         if (imgIndex != -1) {
             cameraPreview.visibility = View.GONE
-            detectingImageView.visibility = View.VISIBLE
+           // detectingImageView.visibility = View.VISIBLE
 
-            val file = getPhotoList()[imgIndex]
-            Glide.with(this).load(file).into(detectingImageView)
+           /* val file = getPhotoList()[imgIndex]
+            Glide.with(this).load(file).into(detectingImageView)*/
         }
     }
 

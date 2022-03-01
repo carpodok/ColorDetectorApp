@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,6 +15,7 @@ import com.example.colordetectorapp.viewmodel.SavedPhotosViewModel
 import java.io.File
 
 class SavedPhotoActivity : AppCompatActivity() {
+
 
     private lateinit var savedPhotos_rv: RecyclerView
     lateinit var savedPhotosViewModel: SavedPhotosViewModel
@@ -34,13 +36,9 @@ class SavedPhotoActivity : AppCompatActivity() {
 
         savedPhotosViewModel = SavedPhotosViewModel()
 
-        val directory = File(externalMediaDirs[0].absolutePath)
-       // files = directory.listFiles() as Array<File>
-
         files = savedPhotosViewModel.getphotos(this)
 
         val adapter = SavedPhotosAdapter(files.reversedArray(), this)
-        //  val adapter = SavedPhotosAdapter(files,this)
 
         savedPhotos_rv.adapter = adapter
 
@@ -61,14 +59,10 @@ class SavedPhotoActivity : AppCompatActivity() {
 
         savedPhotosViewModel.spError.observe(this, Observer {
 
-
             if (it){
                 notFoundText.visibility = View.GONE
                 savedPhotos_rv.visibility = View.GONE
             }
-
-
-
         })
 
         savedPhotosViewModel.spNotFound.observe(this, Observer {
@@ -77,11 +71,6 @@ class SavedPhotoActivity : AppCompatActivity() {
                 notFoundText.visibility = View.VISIBLE
                 savedPhotos_rv.visibility = View.GONE
             }
-
-
         })
-
     }
-
-
 }

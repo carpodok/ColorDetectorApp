@@ -3,6 +3,7 @@ package com.example.colordetectorapp.handler
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import androidx.camera.view.PreviewView
@@ -48,8 +49,6 @@ class ColorDetectHandler {
         }else{
             Log.d("is bigger","no")
             Log.d("is bigger","cameraPreview.right : ${cameraPreview.right}")
-
-
         }
 */
 
@@ -57,12 +56,9 @@ class ColorDetectHandler {
             x  = cameraPreview.right - 1f
         }
 
-
-        Log.d("cameraPreview left",cameraPreview.left.toString())
-        Log.d("cameraPreview right",cameraPreview.right.toString())
-        Log.d("cameraPreview r-l",(cameraPreview.right -cameraPreview.left).toString())
-        Log.d("cameraPreview pointer",x.toString())
-
+        Log.d("cameraPreview bottom",cameraPreview.bottom.toString())
+        Log.d("cameraPreview y",y.toString())
+        Log.d("cameraPreview y",y.toString())
 
 
         pixel = bitmap!!.getPixel(x.toInt(), y.toInt())
@@ -94,12 +90,24 @@ class ColorDetectHandler {
         x = pointer.x + (pointer.width / 2).toFloat()
         y = pointer.y + (pointer.height / 2).toFloat()
 
+        if (x >= photo.right){
+            x  = photo.right - 1f
+        }
+
+
+
+        if (y >= photo.bottom){
+            y = photo.bottom - 1f
+        }
+
         pixel = bitmap!!.getPixel(x.toInt(), y.toInt())
 
         r = Color.red(pixel)
         g = Color.green(pixel)
         b = Color.blue(pixel)
 
+        detectViewModel.initData()
+        name = detectViewModel.getColorNameFromRgb(r, g, b)!!
 
         rgb = Color.rgb(r, g, b)
         hex = Integer.toHexString(rgb and 0x00ffffff)

@@ -69,15 +69,24 @@ class FullPhotoActivity : AppCompatActivity() {
 
         photo.setOnTouchListener { view, motionEvent ->
 
-            fp_card_color_preview.y = motionEvent.y + 50
-            fp_card_color_preview.x = motionEvent.x
-
-            fp_pointer.y = fp_card_color_preview.y + 100
-            fp_pointer.x = fp_card_color_preview.x + fp_card_color_preview.x / 2
+           setCardinates(motionEvent)
 
             detect(motionEvent)
 
             true
+        }
+    }
+
+    private fun setCardinates(motionEvent: MotionEvent){
+
+        fp_card_color_preview.y = motionEvent.y + 50
+        fp_card_color_preview.x = motionEvent.x
+
+        fp_pointer.y = fp_card_color_preview.y + 100
+        fp_pointer.x = fp_card_color_preview.x + fp_card_color_preview.x / 2
+
+        if (fp_pointer.x >= photo.right - 50f){
+            fp_pointer.x = photo.right - 50f
         }
     }
 
@@ -129,8 +138,6 @@ class FullPhotoActivity : AppCompatActivity() {
             val colorUtils = ColorUtils()
 
            // val name = colorUtils.getColorNameFromRgb(r, g, b).toString()
-
-
 
             val rgbInt = Color.rgb(r, g, b)
             val hex = Integer.toHexString(rgbInt and 0x00ffffff)*/
