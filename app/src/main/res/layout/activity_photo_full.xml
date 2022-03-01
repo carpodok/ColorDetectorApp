@@ -73,24 +73,30 @@
             android:id="@+id/fp_colorName"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="casual"
+            android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/fp_cardHex"
+            android:id="@+id/fp_colorHex"
             android:layout_width="0sp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:paddingHorizontal="20dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="casual"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingHorizontal="10dp"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
-
             android:textStyle="bold" />
 
     </LinearLayout>
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/deleteBtn"

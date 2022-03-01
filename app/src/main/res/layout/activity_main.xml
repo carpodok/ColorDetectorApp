@@ -5,8 +5,7 @@
     android:id="@+id/relativeLayoutMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.MainActivity"
-    >
+    tools:context=".View.MainActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_color_preview"
@@ -100,22 +99,24 @@
             android:fontFamily="casual"
             android:foreground="?attr/selectableItemBackground"
             android:paddingHorizontal="10dp"
-            android:text="Color Name"
-            android:textSize="14sp"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
-            android:textStyle="bold"
             android:id="@+id/colorHex"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?attr/selectableItemBackground" />
+            android:fontFamily="casual"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingHorizontal="10dp"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/buttons"

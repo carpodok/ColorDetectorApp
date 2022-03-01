@@ -55,9 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private val detectHandler = ColorDetectHandler()
 
-
     private lateinit var binding: ActivityMainBinding
-    lateinit var bitmap: Bitmap
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraSelector: CameraSelector
@@ -69,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     private var imgIndex by Delegates.notNull<Int>()
 
     // Views
-    private lateinit var detectingImageView: ImageView
     private lateinit var cameraPreview: PreviewView
     private lateinit var galleryBtn: Button
     private lateinit var takePhotoBtn: Button

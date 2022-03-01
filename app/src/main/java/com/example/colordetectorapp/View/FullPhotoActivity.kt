@@ -1,6 +1,8 @@
 package com.example.colordetectorapp.View
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -30,12 +32,8 @@ class FullPhotoActivity : AppCompatActivity() {
 
     private lateinit var bindind: ActivityPhotoFullBinding
 
-    lateinit var adapter: SavedPhotosAdapter
-
     private var index: Int = 0
     private lateinit var uri: Uri
-
-    private lateinit var bitmap: Bitmap
 
     lateinit var fileName: String
 
@@ -58,6 +56,14 @@ class FullPhotoActivity : AppCompatActivity() {
         setContentView(bindind.root)
 
         setInit()
+
+        fp_colorHex.setOnClickListener {
+            copyText(fp_colorHex.text.toString())
+        }
+
+        fp_colorName.setOnClickListener {
+            copyText(fp_colorName.text.toString())
+        }
 
         deleteBtn.setOnClickListener {
 
@@ -98,7 +104,7 @@ class FullPhotoActivity : AppCompatActivity() {
         fp_pointer = bindind.fpPointer
         fp_cardColor = bindind.fpCardColor
         fp_card_color_preview = bindind.fpCardColorPreview
-        fp_colorHex = bindind.fpCardHex
+        fp_colorHex = bindind.fpColorHex
         fp_colorName = bindind.fpColorName
         fp_card_colorName = bindind.fpCardColorName
 
@@ -110,6 +116,7 @@ class FullPhotoActivity : AppCompatActivity() {
         if (uriString != null){
             uri = Uri.parse(uriString)
             Glide.with(this).load(uri).into(photo)
+            deleteBtn.visibility = View.INVISIBLE
 
         }else{
             Glide.with(this).load(getPhotoList()[index]).into(photo)
@@ -169,11 +176,10 @@ class FullPhotoActivity : AppCompatActivity() {
       //  val customDialog = com.example.colordetectorapp.Util.MyCustomDialog(this)
 
 
-
         alertDialog.apply {
             setIcon(R.drawable.ic_delete)
-            setTitle("Hello")
-            setMessage("I just wanted to greet you. I hope you are doing great!")
+            setTitle("Delete")
+            setMessage("Are you sure to delete this photo ?")
             setPositiveButton("Yes") { dialog, _ ->
                 delete(fileName)
                 intentToSavedPhotos()
@@ -185,6 +191,13 @@ class FullPhotoActivity : AppCompatActivity() {
             }
 
         }.create().show()
+    }
+
+    private fun copyText(text: String) {
+        val clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("copy_text", text)
+        clipboardManager.setPrimaryClip(clipData)
+        Toast.makeText(applicationContext, "Copied $text", Toast.LENGTH_SHORT).show()
     }
 
     private fun intentToSavedPhotos(){
@@ -200,14 +213,11 @@ class FullPhotoActivity : AppCompatActivity() {
         if (file.exists()) {
             file.delete()
         }
-
     }
 
     private fun getPhotoList(): Array<File> {
-/*
-        val directory = File(externalMediaDirs[0].absolutePath)
-        val files = directory.listFiles() as Array<File>*/
 
         return savedPhotosViewModel.getphotos(this)
+
     }
 }
