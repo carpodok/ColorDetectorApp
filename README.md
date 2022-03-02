@@ -20,6 +20,6 @@
 :heavy_check_mark: You can pick and detect any image from your local device gallery. <br/>
 :heavy_check_mark: You can take photos and saved them to detect later and also delete them if you want. <br/>
 
- ### :movie_camera: Here the video of this app
+ ### :movie_camera: Here's the video of this app :point_down:
 
 https://user-images.githubusercontent.com/64840495/156257760-00e930fa-ecfb-4c62-a16a-c3c9ace38f3c.mp4
