@@ -1,4 +1,7 @@
-# ColorDetectorApp
+# ColorDetectorApp :mag:
+ 
+![What-your-logo-colors-tells-about-your-brand](https://user-images.githubusercontent.com/64840495/156308197-0d2a9104-4657-4777-b572-ba7ce71f3a25.jpg)
+
 ### What this app do ?
 :radio_button: Main aim of this app is detecting colors on camera and shows their names and hex color codes.
 
