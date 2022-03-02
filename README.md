@@ -7,11 +7,11 @@
 
 ### :arrow_forward:  What I used to make this app ?
 
-- <b> MVVM architecture </b>
-- <b> View Binding </b>
-- <b> CameraX </b>
-- <b> ViewModel </b>
--<b> Live Data </b>
+- <b> <a href="https://developer.android.com/jetpack/guide?gclid=CjwKCAiApfeQBhAUEiwA7K_UH6jiwban6SRsha5oa1taUkSlGsQ5wrP37bmRsyIddcMHm5BhFSTimxoCFvoQAvD_BwE&gclsrc=aw.ds" > MVVM architecture </a> </b>
+- <b> <a href="https://developer.android.com/topic/libraries/view-binding" > View Binding </b>
+- <b> <a href="https://alitalhacoban.medium.com/camerax-in-android-5943d8ccbf53"> CameraX </a> </b>
+- <b> <a href="https://developer.android.com/topic/libraries/architecture/viewmodel" > ViewModel </a> </b>
+- <b> <a href="https://developer.android.com/topic/libraries/architecture/livedata" > Live Data </a> </b>
 
 ### :diamond_shape_with_a_dot_inside: Things you can do with the app;
 
