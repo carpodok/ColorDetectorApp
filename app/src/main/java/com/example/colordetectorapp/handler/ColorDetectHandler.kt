@@ -39,19 +39,6 @@ class ColorDetectHandler {
         x = pointer.x + (pointer.width / 2).toFloat()
         y = pointer.y + (pointer.height / 2).toFloat()
 
-        /*if (x >= bitmap!!.width){
-            x = bitmap!!.width.toFloat() - 1
-            Log.d("is bigger","yes")
-            Log.d("is bigger","bitmap_width : ${bitmap!!.width}")
-            Log.d("is bigger","x : $x")
-            Log.d("is bigger","cameraPreview.right : ${cameraPreview.right}")
-
-        }else{
-            Log.d("is bigger","no")
-            Log.d("is bigger","cameraPreview.right : ${cameraPreview.right}")
-        }
-*/
-
         if (x >= cameraPreview.right){
             x  = cameraPreview.right - 1f
         }
@@ -62,7 +49,6 @@ class ColorDetectHandler {
 
 
         pixel = bitmap!!.getPixel(x.toInt(), y.toInt())
-        // val pixel = bitmap.getPixel((pointer.left) + (pointer.measuredWidth / 2), (pointer.top) + (pointer.measuredHeight / 2))
 
         r = Color.red(pixel)
         g = Color.green(pixel)

@@ -107,48 +107,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        /*val colorPalatte = binding.colorPalatte
-
-        colorPalatte.isDrawingCacheEnabled = true
-        colorPalatte.buildDrawingCache(true)
-
-        var name : String
-
-
-        colorPalatte.setOnTouchListener { view, motionEvent ->
-
-            if (motionEvent.action == MotionEvent.ACTION_MOVE || motionEvent.action == MotionEvent.ACTION_DOWN){
-
-                bitmap = colorPalatte.drawingCache
-
-                val pixel = bitmap.getPixel(motionEvent.x.toInt(),motionEvent.y.toInt())
-
-                val r = Color.red(pixel)
-                val g = Color.green(pixel)
-                val b = Color.blue(pixel)
-
-
-               // colorText.text = "RGB: $r, $g, $b"
-
-                val colorUtils = ColorUtils()
-
-                name = colorUtils.getColorNameFromRgb(r,g,b).toString()
-
-                colorText.text = "Color Name : $name"
-
-
-            }
-
-            true
-        }
-*/
-
         setInit()
 
         startCamera()
-
-
 
 
         colorHex.setOnClickListener {
@@ -189,19 +150,11 @@ class MainActivity : AppCompatActivity() {
 
             pointer.y = pointerY
 
-
-            /*  if (pointerX >= cameraPreview.right  - margin) {
-                  pointerX = cameraPreview.right  - margin
-              }*/
-
             if (pointerX >= cameraPreview.right - 50f) {
                 pointerX = cameraPreview.right - 50f
             }
 
-
             pointer.x = pointerX
-
-
 
             if (motionEvent.action == MotionEvent.ACTION_MOVE || motionEvent.action == MotionEvent.ACTION_DOWN) {
                 detect()
@@ -209,11 +162,6 @@ class MainActivity : AppCompatActivity() {
 
             true
         }
-
-        /*detectingImageView.setOnTouchListener { view, motionEvent ->
-            // detect(motionEvent, false)
-            true
-        }*/
 
         galleryBtn.setOnClickListener {
             clickGallery()
@@ -238,28 +186,6 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun detect() {
-
-
-            /*  bitmap = cameraPreview.bitmap!!
-
-              val x = pointer.x + (pointer.width / 2).toFloat()
-              val y = pointer.y + (pointer.height / 2).toFloat()
-
-              val pixel = bitmap.getPixel(x.toInt(), y.toInt())
-              // val pixel = bitmap.getPixel((pointer.left) + (pointer.measuredWidth / 2), (pointer.top) + (pointer.measuredHeight / 2))
-
-              val r = Color.red(pixel)
-              val g = Color.green(pixel)
-              val b = Color.blue(pixel)
-
-              // colorText.text = "RGB: $r, $g, $b"
-
-
-              detectViewModel.initData()
-              val name = detectViewModel.getColorNameFromRgb(r,g,b)
-
-              val rgbInt = Color.rgb(r, g, b)
-              val hex = Integer.toHexString(rgbInt and 0x00ffffff)*/
 
             val currColor = detectHandler.detect(cameraPreview, pointer)
 
@@ -301,12 +227,6 @@ class MainActivity : AppCompatActivity() {
             val fileName = "JPEG_${System.currentTimeMillis()}"
             val file = File(externalMediaDirs[0], fileName)
 
-            // val pathName : String = Environment.DIRECTORY_DCIM + File.separator + fileName
-            // val file = File(Environment.DIRECTORY_DCIM + File.separator, fileName)
-            // val file = File(pathName)
-
-            // val file = createImageFile()
-
             val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file).build()
             it.takePicture(
                 outputFileOptions,
@@ -330,19 +250,6 @@ class MainActivity : AppCompatActivity() {
 
                 })
         }
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        )
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -385,11 +292,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun chooseImageGallery() {
-        /*val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, IMAGE_CHOOSE) */
-         */
-
         val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(gallery, IMAGE_CHOOSE)
     }
@@ -457,7 +359,6 @@ class MainActivity : AppCompatActivity() {
         pointer = binding.pointer
         colorHex = binding.colorHex
 
-       // detectingImageView = binding.detectingImageView
         cardColor = binding.cardColor
         card_colorName = binding.cardColorName
         card_color_preview = binding.cardColorPreview
@@ -469,10 +370,6 @@ class MainActivity : AppCompatActivity() {
         imgIndex = intent.getIntExtra("imgIndex", -1)
         if (imgIndex != -1) {
             cameraPreview.visibility = View.GONE
-           // detectingImageView.visibility = View.VISIBLE
-
-           /* val file = getPhotoList()[imgIndex]
-            Glide.with(this).load(file).into(detectingImageView)*/
         }
     }
 

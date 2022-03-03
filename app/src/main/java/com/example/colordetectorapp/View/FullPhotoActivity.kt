@@ -128,29 +128,6 @@ class FullPhotoActivity : AppCompatActivity() {
 
         if (motionEvent.action == MotionEvent.ACTION_MOVE || motionEvent.action == MotionEvent.ACTION_DOWN) {
 
-           /* photo.isDrawingCacheEnabled = true
-            bitmap = photo.drawingCache
-
-            val x = fp_pointer.x + (fp_pointer.width / 2).toFloat()
-            val y = fp_pointer.y + (fp_pointer.height / 2).toFloat()
-
-            val pixel = bitmap.getPixel(x.toInt(), y.toInt())
-
-            val r = Color.red(pixel)
-            val g = Color.green(pixel)
-            val b = Color.blue(pixel)
-
-            // colorText.text = "RGB: $r, $g, $b"
-
-            val colorUtils = ColorUtils()
-
-           // val name = colorUtils.getColorNameFromRgb(r, g, b).toString()
-
-            val rgbInt = Color.rgb(r, g, b)
-            val hex = Integer.toHexString(rgbInt and 0x00ffffff)*/
-
-            // colorTextView.text = "Color Name : $name "
-
             val currColor = detectHandler.detect(photo, fp_pointer)
 
             val name = currColor.name
@@ -159,7 +136,7 @@ class FullPhotoActivity : AppCompatActivity() {
             val g = currColor.g
             val b = currColor.b
 
-            fp_colorHex.text = "# $hex"
+            fp_colorHex.text = "#$hex"
             fp_colorName.text = name
             fp_card_colorName.text = name
 
@@ -170,11 +147,6 @@ class FullPhotoActivity : AppCompatActivity() {
 
     private fun showDialog() {
         val alertDialog = AlertDialog.Builder(this)
-
-
-        // TODO
-      //  val customDialog = com.example.colordetectorapp.Util.MyCustomDialog(this)
-
 
         alertDialog.apply {
             setIcon(R.drawable.ic_delete)

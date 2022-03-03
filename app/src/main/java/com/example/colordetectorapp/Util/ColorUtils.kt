@@ -148,46 +148,4 @@ class ColorUtils {
         colorList.add(ColorModel("YellowGreen", 0x9A, 0xCD, 0x32))
         return colorList
     }
-
-
-    /*fun getColorNameFromRgb(r: Int, g: Int, b: Int): String? {
-        val colorList: ArrayList<ColorName> = initColorList()
-        var closestMatch: ColorName? = null
-        var minMSE = Int.MAX_VALUE
-        var mse: Int
-        for (c: ColorName in colorList) {
-            mse = c.computeMSE(r, g, b)
-            if (mse < minMSE) {
-                minMSE = mse
-                closestMatch = c
-            }
-        }
-        return if (closestMatch != null) {
-            closestMatch.name
-        } else {
-            "No matched color name."
-        }
-    }*/
-
-
-    /*fun getColorNameFromHex(hexColor: Int): String? {
-        val r = hexColor and 0xFF0000 shr 16
-        val g = hexColor and 0xFF00 shr 8
-        val b = hexColor and 0xFF
-        return getColorNameFromRgb(r, g, b)
-    }
-
-    fun colorToHex(c: Color): Int {
-        return Integer.decode(
-            "0x"
-                    + Integer.toHexString(c.getRGB()).substring(2)
-        )
-    }
-
-    fun getColorNameFromColor(color: Color): String? {
-        return getColorNameFromRgb(
-            color.getRed(), color.getGreen(),
-            color.getBlue()
-        )
-    }*/
 }
