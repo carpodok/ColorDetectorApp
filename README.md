@@ -19,6 +19,7 @@
 :heavy_check_mark: You can copy colors' names and hex codes easy. <br/>
 :heavy_check_mark: You can pick and detect any image from your local device gallery. <br/>
 :heavy_check_mark: You can take photos and saved them to detect later and also delete them if you want. <br/>
+  
 
  ### :movie_camera: Here's the video of this app :point_down:
 
